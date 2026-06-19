@@ -1,0 +1,53 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // For now, any authenticated admin can read/write everything.
+    // In the future, this can be restricted further based on user roles.
+
+    match /bookings/{document=**} {
+      // Anyone can create a booking request (from the public site)
+      allow create: if true;
+      // Only authenticated admins can read, update, or delete bookings
+      allow read, update, delete: if isAuthenticated();
+    }
+
+    match /services/{document=**} {
+      // Anyone can read services (for the public site)
+      allow read: if true;
+      // Only authenticated admins can manage services
+      allow write: if isAuthenticated();
+    }
+
+    match /barbers/{document=**} {
+      // Anyone can read barbers (for the public site)
+      allow read: if true;
+      // Only authenticated admins can manage barbers
+      allow write: if isAuthenticated();
+    }
+
+    match /reviews/{document=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /gallery/{document=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /settings/{document=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /admins/{document=**} {
+      allow read, write: if isAuthenticated();
+    }
+  }
+}

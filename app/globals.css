@@ -1,0 +1,219 @@
+@import "tailwindcss";
+
+/* ── Tailwind v4 Theme ─────────────────────────────────── */
+@theme {
+  --font-heading: var(--font-playfair), Georgia, serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+
+  --color-gold: #C9A84C;
+  --color-gold-light: #E2C97E;
+  --color-gold-dark: #A07830;
+  --color-dark: #0a0a0a;
+  --color-dark-surface: #111111;
+  --color-dark-card: #161616;
+  --color-dark-elevated: #1c1c1c;
+
+  --shadow-gold: 0 0 30px rgba(201,168,76,0.15), 0 4px 20px rgba(0,0,0,0.4);
+  --shadow-gold-sm: 0 0 15px rgba(201,168,76,0.1);
+  --shadow-card: 0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-card-hover: 0 16px 48px rgba(0,0,0,0.5), 0 0 30px rgba(201,168,76,0.15);
+
+  --animate-fade-up: fade-up 0.6s ease-out forwards;
+  --animate-float: float 4s ease-in-out infinite;
+  --animate-glow: glow 2s ease-in-out infinite;
+
+  --keyframes-fade-up: {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  };
+  --keyframes-float: {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-8px); }
+  };
+  --keyframes-glow: {
+    0%, 100% { opacity: 0.6; }
+    50%       { opacity: 1; }
+  };
+}
+
+/* ── Design Tokens ─────────────────────────────────────── */
+:root {
+  --blur-glass: blur(16px);
+  /* Safe area insets for notched / Dynamic Island iPhones */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+/* ── Base ──────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent font scaling in landscape on iOS */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: #0a0a0a;
+  color: #ffffff;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  overflow-x: hidden;
+  /* Improve tap responsiveness */
+  touch-action: manipulation;
+}
+
+/* ── Selection ─────────────────────────────────────────── */
+::selection {
+  background: rgba(201, 168, 76, 0.3);
+  color: #E2C97E;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: #A07830; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #C9A84C; }
+
+/* ── Glass Card ────────────────────────────────────────── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  border-radius: 16px;
+}
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(201, 168, 76, 0.35);
+}
+
+/* ── Gold Text Gradient ────────────────────────────────── */
+.gold-text {
+  background: linear-gradient(135deg, #C9A84C 0%, #E2C97E 50%, #A07830 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Section padding ───────────────────────────────────── */
+.section-pad {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+@media (min-width: 640px) {
+  .section-pad {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+}
+@media (min-width: 768px) {
+  .section-pad {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+}
+
+/* ── Gallery hover overlay ─────────────────────────────── */
+.gallery-item { overflow: hidden; position: relative; }
+.gallery-item .gallery-overlay {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.gallery-item:hover .gallery-overlay { opacity: 1; }
+.gallery-item .gallery-img {
+  transform: scale(1);
+  transition: transform 0.6s ease;
+}
+.gallery-item:hover .gallery-img { transform: scale(1.08); }
+
+/* ── Shine animation on gold buttons ───────────────────── */
+.btn-gold {
+  position: relative;
+  overflow: hidden;
+}
+.btn-gold::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -75%;
+  width: 50%;
+  height: 200%;
+  background: rgba(255,255,255,0.15);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+}
+.btn-gold:hover::after { left: 125%; }
+
+/* ── Custom animations ─────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes glow {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+.animate-fade-up { animation: fade-up 0.6s ease-out forwards; }
+.animate-float   { animation: float 4s ease-in-out infinite; }
+.animate-glow    { animation: glow 2s ease-in-out infinite; }
+
+/* ── Font utilities ────────────────────────────────────── */
+.font-heading { font-family: var(--font-playfair), Georgia, serif; }
+.font-body    { font-family: var(--font-inter), system-ui, sans-serif; }
+
+/* ── Scrollbar hide utility ────────────────────────────── */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
+/* ── Sticky mobile bottom bar ──────────────────────────── */
+.mobile-sticky-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-bottom: max(1rem, var(--safe-bottom));
+  z-index: 40;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── Reduced motion overrides ──────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-float,
+  .animate-glow,
+  .animate-fade-up {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ── Minimum tap target helper ─────────────────────────── */
+.tap-target {
+  min-height: 44px;
+  min-width: 44px;
+}
