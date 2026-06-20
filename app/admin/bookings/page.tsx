@@ -67,79 +67,146 @@ export default function BookingsPage() {
             />
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[800px] whitespace-nowrap">
-              <thead>
-                <tr className="border-b border-[#222] bg-[#161616] text-[#9CA3AF] text-xs uppercase tracking-wider">
-                  <th className="py-4 px-6 font-medium">Customer</th>
-                  <th className="py-4 px-6 font-medium">Service & Stylist</th>
-                  <th className="py-4 px-6 font-medium">Date & Time</th>
-                  <th className="py-4 px-6 font-medium">Status</th>
-                  <th className="py-4 px-6 font-medium text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="text-sm">
-                {bookings.map((b) => (
-                  <tr key={b.id} className="border-b border-[#222] last:border-0 hover:bg-[#1a1a1a] transition-colors">
-                    <td className="py-4 px-6">
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left border-collapse min-w-[800px] whitespace-nowrap">
+                <thead>
+                  <tr className="border-b border-[#222] bg-[#161616] text-[#9CA3AF] text-xs uppercase tracking-wider">
+                    <th className="py-4 px-6 font-medium">Customer</th>
+                    <th className="py-4 px-6 font-medium">Service & Stylist</th>
+                    <th className="py-4 px-6 font-medium">Date & Time</th>
+                    <th className="py-4 px-6 font-medium">Status</th>
+                    <th className="py-4 px-6 font-medium text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="text-sm">
+                  {bookings.map((b) => (
+                    <tr key={b.id} className="border-b border-[#222] last:border-0 hover:bg-[#1a1a1a] transition-colors">
+                      <td className="py-4 px-6">
+                        <p className="font-semibold text-white">{b.customerName}</p>
+                        <p className="text-xs text-[#6B7280] mt-0.5">{b.customerPhone}</p>
+                      </td>
+                      <td className="py-4 px-6">
+                        <p className="text-[#C9A84C] font-medium">{b.serviceName}</p>
+                        <p className="text-xs text-[#6B7280] mt-0.5">by {b.barberName}</p>
+                      </td>
+                      <td className="py-4 px-6">
+                        <p className="text-white">
+                          {b.bookingDate instanceof Date ? b.bookingDate.toDateString() : new Date(b.bookingDate).toDateString()}
+                        </p>
+                        <p className="text-xs text-[#6B7280] mt-0.5">{b.timeSlot}</p>
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-flex ${
+                          b.status === BOOKING_STATUS.PENDING ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' :
+                          b.status === BOOKING_STATUS.CONFIRMED ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' :
+                          b.status === BOOKING_STATUS.COMPLETED ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' :
+                          'bg-red-500/10 text-red-400 border border-red-500/20'
+                        }`}>
+                          {b.status}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6">
+                        <div className="flex items-center justify-end gap-2">
+                          {b.status === BOOKING_STATUS.PENDING && (
+                            <>
+                              <button
+                                onClick={() => updateStatus(b.id!, BOOKING_STATUS.CONFIRMED)}
+                                className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors tooltip-trigger"
+                                title="Approve"
+                              >
+                                <Check size={16} />
+                              </button>
+                              <button
+                                onClick={() => updateStatus(b.id!, BOOKING_STATUS.CANCELLED)}
+                                className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors tooltip-trigger"
+                                title="Reject"
+                              >
+                                <X size={16} />
+                              </button>
+                            </>
+                          )}
+                          {b.status === BOOKING_STATUS.CONFIRMED && (
+                            <button
+                              onClick={() => updateStatus(b.id!, BOOKING_STATUS.COMPLETED)}
+                              className="text-xs font-medium px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-colors"
+                            >
+                              Mark Complete
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden flex flex-col divide-y divide-[#222]">
+              {bookings.map((b) => (
+                <div key={b.id} className="p-5 hover:bg-[#1a1a1a] transition-colors flex flex-col gap-4">
+                  <div className="flex justify-between items-start">
+                    <div>
                       <p className="font-semibold text-white">{b.customerName}</p>
                       <p className="text-xs text-[#6B7280] mt-0.5">{b.customerPhone}</p>
-                    </td>
-                    <td className="py-4 px-6">
-                      <p className="text-[#C9A84C] font-medium">{b.serviceName}</p>
-                      <p className="text-xs text-[#6B7280] mt-0.5">by {b.barberName}</p>
-                    </td>
-                    <td className="py-4 px-6">
-                      <p className="text-white">
+                    </div>
+                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-flex ${
+                      b.status === BOOKING_STATUS.PENDING ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' :
+                      b.status === BOOKING_STATUS.CONFIRMED ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' :
+                      b.status === BOOKING_STATUS.COMPLETED ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' :
+                      'bg-red-500/10 text-red-400 border border-red-500/20'
+                    }`}>
+                      {b.status}
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3 text-sm bg-[#161616] rounded-lg p-3 border border-[rgba(255,255,255,0.02)]">
+                    <div>
+                      <p className="text-[11px] text-[#9CA3AF] mb-1 uppercase tracking-wider">Service</p>
+                      <p className="text-[#C9A84C] font-medium leading-tight">{b.serviceName}</p>
+                      <p className="text-[11px] text-[#6B7280] mt-0.5">by {b.barberName}</p>
+                    </div>
+                    <div>
+                      <p className="text-[11px] text-[#9CA3AF] mb-1 uppercase tracking-wider">Date & Time</p>
+                      <p className="text-white leading-tight">
                         {b.bookingDate instanceof Date ? b.bookingDate.toDateString() : new Date(b.bookingDate).toDateString()}
                       </p>
-                      <p className="text-xs text-[#6B7280] mt-0.5">{b.timeSlot}</p>
-                    </td>
-                    <td className="py-4 px-6">
-                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-flex ${
-                        b.status === BOOKING_STATUS.PENDING ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' :
-                        b.status === BOOKING_STATUS.CONFIRMED ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' :
-                        b.status === BOOKING_STATUS.COMPLETED ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' :
-                        'bg-red-500/10 text-red-400 border border-red-500/20'
-                      }`}>
-                        {b.status}
-                      </span>
-                    </td>
-                    <td className="py-4 px-6">
-                      <div className="flex items-center justify-end gap-2">
-                        {b.status === BOOKING_STATUS.PENDING && (
-                          <>
-                            <button
-                              onClick={() => updateStatus(b.id!, BOOKING_STATUS.CONFIRMED)}
-                              className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors tooltip-trigger"
-                              title="Approve"
-                            >
-                              <Check size={16} />
-                            </button>
-                            <button
-                              onClick={() => updateStatus(b.id!, BOOKING_STATUS.CANCELLED)}
-                              className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors tooltip-trigger"
-                              title="Reject"
-                            >
-                              <X size={16} />
-                            </button>
-                          </>
-                        )}
-                        {b.status === BOOKING_STATUS.CONFIRMED && (
-                          <button
-                            onClick={() => updateStatus(b.id!, BOOKING_STATUS.COMPLETED)}
-                            className="text-xs font-medium px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-colors"
-                          >
-                            Mark Complete
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                      <p className="text-[11px] text-[#6B7280] mt-0.5">{b.timeSlot}</p>
+                    </div>
+                  </div>
+
+                  <div className="pt-1 flex gap-2">
+                    {b.status === BOOKING_STATUS.PENDING && (
+                      <>
+                        <button
+                          onClick={() => updateStatus(b.id!, BOOKING_STATUS.CANCELLED)}
+                          className="flex-1 py-2.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors flex justify-center items-center gap-1.5 text-xs font-medium"
+                        >
+                          <X size={14} /> Reject
+                        </button>
+                        <button
+                          onClick={() => updateStatus(b.id!, BOOKING_STATUS.CONFIRMED)}
+                          className="flex-1 py-2.5 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors flex justify-center items-center gap-1.5 text-xs font-medium"
+                        >
+                          <Check size={14} /> Approve
+                        </button>
+                      </>
+                    )}
+                    {b.status === BOOKING_STATUS.CONFIRMED && (
+                      <button
+                        onClick={() => updateStatus(b.id!, BOOKING_STATUS.COMPLETED)}
+                        className="w-full py-2.5 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-colors text-xs font-medium"
+                      >
+                        Mark as Complete
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
 
