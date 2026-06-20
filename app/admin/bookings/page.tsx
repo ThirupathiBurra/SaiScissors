@@ -68,7 +68,7 @@ export default function BookingsPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse min-w-[800px] whitespace-nowrap">
               <thead>
                 <tr className="border-b border-[#222] bg-[#161616] text-[#9CA3AF] text-xs uppercase tracking-wider">
                   <th className="py-4 px-6 font-medium">Customer</th>
